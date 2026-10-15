@@ -456,3 +456,10 @@ problem one would be customer interaction. Problem two would be human review loo
 ## Problem 11: Submit to Github
 
 1. Start recording them again, I changed my mind. We are now on problem 11. create a github repo for this project, name it whatever you like and put the url in output/github_url.txt
+2. MAke sure you are not including my real .env nor the data/ file
+3. The expected file layout for this assignment is here, compare this to the actual layout and tell me where it diverges
+(Attached image: a tree for hw5/ listing AI_prompts.md, requirements.txt, .env.example, .gitignore, .mcp.json, README.md, data/ (campus_customs.db, campus_customs_new.db), mcp_server/ (server.py, README.md), frontend/, backend/ (main.py, models.py, prompts/ with boss.md, inventory.md, accounting.md, facilities.md, customer_service.md), output/ (harness.md, mcp_smoke.json, desk_tickets.html, design.md, resolved_tickets.json, resolved_board.html, audit_trail.json, github_url.txt))
+4. Update the capital mismatch of the AI_Prompts.md file to match the goal.
+Drop the resolved_board.json from the repo and this project.
+Are the team.py, tools.py, and audit.py completely necessary as stand alone files? 
+Also, make sure the agents prompt or pydanticAI files do not have their own api keys
