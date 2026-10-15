@@ -463,3 +463,4 @@ problem one would be customer interaction. Problem two would be human review loo
 Drop the resolved_board.json from the repo and this project.
 Are the team.py, tools.py, and audit.py completely necessary as stand alone files? 
 Also, make sure the agents prompt or pydanticAI files do not have their own api keys
+5. Keep the python files as is

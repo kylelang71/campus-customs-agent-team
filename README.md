@@ -25,7 +25,37 @@ cp .env.example .env                                                  # set PORT
 cd frontend && npm install
 ```
 
-Start the backend first, then `npm run dev`. Reset the working DB to the original with `python db.py reset` from `backend/` (not a route; never touches the audit trail; it also stamps `data/last_reset.txt`). Restart the backend after a reset so the board's run list is rebuilt from the new reset time.
+### Running it
+
+`data/` is not in the repository (it is git-ignored). Put the original database at `data/campus_customs.db`; the working copy `data/campus_customs_new.db` is made from it. The order is: clean database, MCP server, backend, board, then the tickets.
+
+1. **Copy the original DB to the working copy when you need a clean run.** From `backend/`:
+
+   ```
+   ../.venv/bin/python db.py reset
+   ```
+
+   This replaces `data/campus_customs_new.db` with a copy of the original (`campus_customs.db` is only read, never changed), which also clears every pending approval, and stamps `data/last_reset.txt`. Copying the file by hand (`cp data/campus_customs.db data/campus_customs_new.db`) gives the same data but does not stamp the reset time. It is not a route, never touches the audit trail, and must not be run while a ticket is running.
+2. **Start the MCP server.** The backend starts it for you as a stdio subprocess (see `backend/tools.py`), so the app needs nothing extra. To run it yourself, for example to check the tools or to use it from Claude Code (`.mcp.json` registers it as `campus-customs`):
+
+   ```
+   .venv/bin/python mcp_server/server.py
+   ```
+3. **Start the FastAPI backend** (needs `PORTKEY_API_KEY` in `.env`). From `backend/`:
+
+   ```
+   ../.venv/bin/uvicorn main:app --reload --port 8000
+   ```
+
+   Do not edit backend files or restart it while a ticket is running: that ends the run.
+4. **Start the React board.** From `frontend/`:
+
+   ```
+   npm run dev
+   ```
+
+   It serves and opens `http://localhost:5173`. Open it as `localhost`, not `127.0.0.1`, because the backend only accepts that origin.
+5. **Reset the DB before a full three-ticket run.** Repeat step 1, restart the backend (so its run list is rebuilt from the new reset time) and reload the board. Checking should read $3,400 with tickets 101, 102 and 103 open and nothing waiting for approval. Then start the tickets one at a time ("Start the team"; the team works one ticket at a time), type your name under "Needs your approval", and approve or decline each prepared payment, order or customer message in any order. A payment or order larger than the checking balance cannot be approved.
 
 ### Request path
 
