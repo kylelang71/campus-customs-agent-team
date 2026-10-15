@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Campus Customs: Ticket Test Report</title>
+<style>
+  :root { --ink:#1b2430; --muted:#5b6675; --line:#d7dce3; --bg:#f6f7f9; --card:#ffffff; --accent:#00356b; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; color:var(--ink); background:var(--bg); line-height:1.5; }
+  header { background:var(--accent); color:#fff; padding:18px 28px; }
+  header h1 { margin:0; font-size:20px; font-weight:600; }
+  header p { margin:4px 0 0; font-size:13px; opacity:.85; }
+  nav { display:flex; flex-wrap:wrap; gap:4px; padding:12px 28px 0; background:#fff; border-bottom:1px solid var(--line); }
+  nav button { font:inherit; font-size:14px; padding:9px 16px; border:1px solid var(--line); border-bottom:none; background:var(--bg); color:var(--muted); border-radius:6px 6px 0 0; cursor:pointer; }
+  nav button:hover { color:var(--ink); }
+  nav button[aria-selected="true"] { background:var(--card); color:var(--accent); font-weight:600; position:relative; top:1px; }
+  main { max-width:900px; margin:0 auto; padding:24px 28px 60px; }
+  .page { display:none; }
+  .page.active { display:block; }
+  h2 { margin:0 0 18px; font-size:22px; }
+  section { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:18px 22px; margin-bottom:20px; }
+  section h3 { margin:0 0 12px; font-size:13px; text-transform:uppercase; letter-spacing:.06em; color:var(--accent); }
+  dl { margin:0; }
+  dt { font-weight:600; margin-top:12px; }
+  dt:first-child { margin-top:0; }
+  dd { margin:2px 0 0; }
+  .later { color:var(--muted); font-style:italic; margin:0; }
+  .actual-box { min-height:120px; border:1px dashed var(--line); border-radius:6px; background:#fbfbfc; }
+  .actual h4 { margin:16px 0 6px; font-size:13px; }
+  .actual h4:first-child { margin-top:0; }
+  .actual p { margin:0 0 8px; }
+  .actual ul { margin:0 0 8px; padding-left:20px; }
+  .actual table { width:100%; border-collapse:collapse; font-size:13px; margin:4px 0 8px; }
+  .actual th, .actual td { text-align:left; vertical-align:top; padding:6px 8px; border:1px solid var(--line); }
+  .actual th { background:var(--bg); font-weight:600; }
+  .actual td.t { white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .actual .records { background:#f1f5fb; border-left:3px solid var(--accent); padding:8px 14px; margin:6px 0 12px; font-size:13px; }
+  .actual .records p { margin:0 0 6px; }
+  .actual h4.q { font-size:15px; margin:22px 0 8px; color:var(--accent); }
+  .actual .src { color:var(--muted); font-size:12px; }
+  @media print { nav { display:none; } .page { display:block !important; page-break-after:always; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Campus Customs: Ticket Test Report</h1>
+  <p>Expected behavior for each open ticket, and what the agents actually did (from the audit trail and the database).</p>
+</header>
+
+<nav role="tablist" aria-label="Pages">
+  <button role="tab" data-page="t101" aria-selected="true">Ticket 101</button>
+  <button role="tab" data-page="t102" aria-selected="false">Ticket 102</button>
+  <button role="tab" data-page="t103" aria-selected="false">Ticket 103</button>
+  <button role="tab" data-page="cash" aria-selected="false">Cash</button>
+  <button role="tab" data-page="reflections" aria-selected="false">Reflections</button>
+</nav>
+
+<main>
+
+  <div class="page active" id="t101">
+    <h2>Ticket 101</h2>
+    <section id="t101-expected">
+      <h3>Expected</h3>
+      <dl>
+        <dt>First Boss Call</dt>
+        <dd>Inventory</dd>
+        <dt>All the expected agent delegations</dt>
+        <dd>Inventory reads inventory, confirms to boss that there is no CC-TEE-WHITE in S available, Boss or Inventory tells Customer Service, and Customer Service and Boss draft a message for the customer telling them it’s not available, this will trigger a call to the vendor look up to determine whether there is time remaining on the lead time versus the desk.</dd>
+        <dt>Which MCP tools are expected to be called</dt>
+        <dd>read_inventory, read_vendor, read_ticket, read_desk</dd>
+      </dl>
+    </section>
+    <section id="t101-actual">
+      <h3>Actual</h3>
+      <div class="actual">
+        <h4>First Boss call</h4>
+        <p>Inventory (22:09:05).</p>
+        <h4>Agents that worked on it</h4>
+        <p>All five: Boss, Inventory, Customer Service, Accounting, and Facilities (asked by Accounting about the rent lease for the cash outlook).</p>
+        <h4>Delegations (time, from → to, with what)</h4>
+        <table><thead><tr><th>Time</th><th>From → To</th><th>Sent</th><th>Result</th></tr></thead><tbody>
+<tr><td class="t">22:09:05 → 22:09:11</td><td>Boss → Inventory</td><td>Plain task (CC-TEE-WHITE, S, qty 1); reply type RestockRecommendation</td><td>0 on hand; recommended order 1; Bulldog Print Co, 5-day lead time; invoice 501 blocks shipment; minimum order quantity unknown.</td></tr>
+<tr><td class="t">22:09:25 → 22:10:12</td><td>Boss → Accounting</td><td>OutlookRequest (open tickets, proposed payment: invoice 501); <code>known</code>; reply type CashOutlook. Sent in the same step as the Customer Service call</td><td>Accounting read balance, invoices, stock and prices, and (22:09:38 → 22:09:45) asked Facilities for lease 1: rent next due 2026-10-02 (already paid). CashOutlook: $1,000 available.</td></tr>
+<tr><td class="t">22:09:38 → 22:09:45</td><td>Accounting → Facilities</td><td>Plain question for lease 1; reply type Leases</td><td>Lease 1: $2,400, next due 2026-10-02.</td></tr>
+<tr><td class="t">22:09:25 → 22:10:12</td><td>Boss → Customer Service</td><td>CustomerUpdateRequest; reply type CustomerReply</td><td>Draft: out of stock; new stock could arrive in about 5 days after an order is placed.</td></tr>
+<tr><td class="t">22:10:28 → 22:10:32</td><td>Boss → Accounting</td><td>OutlookRequest again: "exclude rent; approval 1 is approved and paid"; <code>known</code>; reply type CashOutlook</td><td>Corrected CashOutlook ($1,000 available, invoice 501 $840 under review).</td></tr>
+<tr><td class="t">22:10:45</td><td>Boss → Accounting</td><td>PaymentReview; reply type PaymentRequest</td><td>Not sent: <code>round</code>, <code>reviewed</code> missing.</td></tr>
+<tr><td class="t">22:10:56 → 22:12:11</td><td>Boss → Accounting</td><td>PaymentReview corrected (proceed, invoice 501, $840); <code>known</code>; reply type PaymentRequest</td><td>Accounting called write_payments at 22:11:01 (approval 3 created). The delegate returned CHECK-IN 1 at 22:11:56; Boss check_in at 22:12:11 returned the reply: awaiting human approval, approval 3.</td></tr>
+</tbody></table>
+        <h4>MCP tools used (calls)</h4>
+        <ul>
+          <li><b>Boss:</b> read_ticket 1, read_desk 1, read_approvals 2, write_messages 1, write_ticket 1. Team tools: delegate 6 (1 not sent), check_in 1, status_update 5.</li>
+          <li><b>Inventory:</b> read_inventory 1, read_vendor 1, read_invoices 1, read_desk 1.</li>
+          <li><b>Customer Service:</b> read_desk 1.</li>
+          <li><b>Accounting:</b> read_balance 1, read_invoices 1, read_inventory 1, read_pricing 1, write_payments 1. Team tools: delegate 1.</li>
+          <li><b>Facilities:</b> read_lease 1.</li>
+        </ul>
+        <h4>Outcome</h4>
+        <p>Run done in 3 min 53 s (22:08:45 to 22:12:38). The Boss prepared the customer reply with write_messages at 22:10:45 (approval 2), wrote a note to ticket 101 (still open) and reported both approvals pending. No order was placed (minimum order quantity unknown). Decisions, all by KYLE: approval 2 (customer message) approved 22:15:23; approval 3 (pay invoice 501, $840) approved 22:20:22.</p>
+        <p class="src">Times are local (UTC−4), 2026-10-14. For an accepted handoff the first time is when the receiving agent got the task and the second is when the delegate call returned; a refused call has one time. Source: output/audit_trail.json (run 49b27a82515f) and campus_customs_new.db.</p>
+      </div>
+    </section>
+  </div>
+
+  <div class="page" id="t102">
+    <h2>Ticket 102</h2>
+    <section id="t102-expected">
+      <h3>Expected</h3>
+      <dl>
+        <dt>First Boss Call</dt>
+        <dd>Accounting</dd>
+        <dt>All the expected agent delegations</dt>
+        <dd>Boss checks with accounting that there is enough money available, accounting checks accuracy with facilities, accounting returns to boss that it is accurate and that there is enough money to pay this, Boss checks whether this can be pain in addition to other open tickets and messages user.</dd>
+        <dd>Boss payment review: before the payment is made, Accounting sends the proposed rent payment to the Boss. The Boss reads all the open tickets and asks Accounting for a cash outlook (every open obligation, the cash left after this payment, and the cash left if everything were paid). The Boss checks the totals and answers proceed, pay another payment first, hold, or escalate to a human.</dd>
+        <dd>Human approval: on a proceed, Accounting only prepares the payment, and a human approves it in the dashboard. Cash changes only when they do.</dd>
+        <dt>Which MCP tools are expected to be called</dt>
+        <dd>read_lease, read_balance, read_desk, read_ticket, read_invoices, read_inventory, read_pricing, read_approvals, write_payments, write_ticket</dd>
+      </dl>
+    </section>
+    <section id="t102-actual">
+      <h3>Actual</h3>
+      <div class="actual">
+        <h4>First Boss call</h4>
+        <p>Facilities (22:04:22).</p>
+        <h4>Agents that worked on it</h4>
+        <p>Three: Boss, Facilities and Accounting. Inventory and Customer Service were not used.</p>
+        <h4>Delegations (time, from → to, with what)</h4>
+        <table><thead><tr><th>Time</th><th>From → To</th><th>Sent</th><th>Result</th></tr></thead><tbody>
+<tr><td class="t">22:04:22 → 22:04:29</td><td>Boss → Facilities</td><td>Plain task for lease 1; reply type RentDue</td><td>Lease 1: Chapel Street shop, Elm City Properties, $2,400, next due 2026-09-02 (2 days away, ticket needed now).</td></tr>
+<tr><td class="t">22:04:34</td><td>Boss → Accounting</td><td>OutlookRequest; <code>known</code>: RentDue and shop date</td><td>Not sent: <code>proposed.kind</code> and <code>proposed.ref_id</code> missing.</td></tr>
+<tr><td class="t">22:04:41 → 22:04:51</td><td>Boss → Accounting</td><td>OutlookRequest corrected; <code>known</code>: RentDue and shop date; reply type CashOutlook</td><td>CashOutlook: $3,400 available; rent $2,400 under review; Accounting did not ask Facilities (it had the lease).</td></tr>
+<tr><td class="t">22:04:58</td><td>Boss → Accounting</td><td>PaymentReview (reply type Payment); <code>known</code></td><td>Not sent: <code>round</code>, <code>reviewed</code> missing and <code>reasons</code> not a list.</td></tr>
+<tr><td class="t">22:05:08 → stopped 22:07:26</td><td>Boss → Accounting</td><td>PaymentReview corrected (proceed, rent lease 1); <code>known</code>; reply type Payment</td><td>Accounting called write_payments at 22:05:13 (approval 1 created) but never replied. The delegate returned CHECK-IN 1 at 22:06:08; Boss check_in at 22:07:16 (CHECK-IN 2, no activity for 2 min) and 22:07:26 (gave up, task stopped).</td></tr>
+</tbody></table>
+        <h4>MCP tools used (calls)</h4>
+        <ul>
+          <li><b>Boss:</b> read_ticket 1, read_desk 1, read_approvals 2, write_ticket 1. Team tools: delegate 5 (2 not sent), check_in 2, status_update 4.</li>
+          <li><b>Facilities:</b> read_lease 1.</li>
+          <li><b>Accounting:</b> read_balance 1, read_invoices 1, read_inventory 1, read_pricing 1, write_payments 1.</li>
+        </ul>
+        <h4>Outcome</h4>
+        <p>Run done in 3 min 47 s (22:04:07 to 22:07:54). After stopping Accounting the Boss read the approvals (22:07:31), found approval 1 already pending, wrote it to ticket 102 (still open) and reported it. Prepared: approval 1 (pay rent $2,400 to Elm City Properties). Decision: approved by KYLE at 22:08:57.</p>
+        <p class="src">Times are local (UTC−4), 2026-10-14. For an accepted handoff the first time is when the receiving agent got the task and the second is when the delegate call returned; a refused call has one time. Source: output/audit_trail.json (run f49d916383c6) and campus_customs_new.db.</p>
+      </div>
+    </section>
+  </div>
+
+  <div class="page" id="t103">
+    <h2>Ticket 103</h2>
+    <section id="t103-expected">
+      <h3>Expected</h3>
+      <dl>
+        <dt>First Boss Call</dt>
+        <dd>Inventory</dd>
+        <dt>All the expected agent delegations</dt>
+        <dd>Inventory and Accounting - how many do we need to order, how long is the lead time, who will we order from, what is the price, what is the minimum price to make our 30% margin.</dd>
+        <dt>Which MCP tools are expected to be called</dt>
+        <dd>read_inventory, read_vendor, read_balance, read_invoices, read_desk, read_pricing, read_ticket</dd>
+      </dl>
+    </section>
+    <section id="t103-actual">
+      <h3>Actual</h3>
+      <div class="actual">
+        <h4>First Boss call</h4>
+        <p>Inventory and Accounting together (both received the task at 22:15:42).</p>
+        <h4>Agents that worked on it</h4>
+        <p>Four: Boss, Inventory, Accounting and Customer Service. Facilities was not used.</p>
+        <h4>Delegations (time, from → to, with what)</h4>
+        <table><thead><tr><th>Time</th><th>From → To</th><th>Sent</th><th>Result</th></tr></thead><tbody>
+<tr><td class="t">22:15:42 → 22:15:47</td><td>Boss → Inventory</td><td>Plain task (CC-HOOD-NAVY M, qty 20); reply type RestockRecommendation</td><td>8 on hand vs 20 wanted; recommended order 12; Bulldog Print Co, 5-day lead time; invoice 501 blocks shipment; minimum order quantity unknown.</td></tr>
+<tr><td class="t">22:15:42 → 22:15:50</td><td>Boss → Accounting</td><td>Plain task: commit to one unit price above the 30% floor and below list, with reasoning; reply type DiscountAnalysis. Sent in the same step as the Inventory call</td><td>Accounting chose <b>$49.00</b> per unit: 55.1% margin (floor price is $31.43), 15.52% off the $58 list; 20 units = $980 revenue, $540 profit.</td></tr>
+<tr><td class="t">22:16:06 → 22:18:57</td><td>Boss → Accounting</td><td>Plain task: prepare the purchase of 12 hoodies, 12 × $22 = $264, due 2026-09-05 (shop date + 5 lead days); <code>known</code>: stock, lead time and price facts; reply type Approval</td><td>Accounting read invoices, approvals and balance, then called write_invoices at 22:16:24 (approval 4, a purchase order of $264). The delegate returned CHECK-IN 1 at 22:17:06; Boss check_in at 22:18:21 (CHECK-IN 2, quiet for 1m56s) and 22:18:57, which returned the reply: approval 4 pending.</td></tr>
+<tr><td class="t">22:17:06</td><td>Boss → Customer Service</td><td>CustomerUpdateRequest with an extra field (<code>subject</code>)</td><td>Not sent: extra fields not permitted.</td></tr>
+<tr><td class="t">22:17:11 → 22:17:17</td><td>Boss → Customer Service</td><td>CustomerUpdateRequest corrected (stock band, lead time, the decided price); reply type CustomerReply</td><td>Draft: 5 or fewer in stock, the rest about 5 days after an order, "The offer is $49 per hoodie, $980 for 20 hoodies."</td></tr>
+</tbody></table>
+        <h4>MCP tools used (calls)</h4>
+        <ul>
+          <li><b>Boss:</b> read_ticket 1, read_desk 1, read_approvals 1, write_messages 1, write_ticket 1. Team tools: delegate 5 (1 not sent), check_in 2, status_update 3.</li>
+          <li><b>Inventory:</b> read_inventory 1, read_vendor 1, read_invoices 1, read_desk 1.</li>
+          <li><b>Accounting:</b> read_pricing 1, read_invoices 1, read_approvals 1, read_balance 1, write_invoices 1.</li>
+          <li><b>Customer Service:</b> no tools (it answered from the typed request).</li>
+        </ul>
+        <h4>Outcome</h4>
+        <p>Run done in 3 min 52 s (22:15:27 to 22:19:19). The Boss decided on Accounting's $49 (recomputed 55.1%), prepared the note to the AI club with write_messages at 22:19:07 (approval 5, which states $49 and $980), wrote a note to ticket 103 (still open) and reported it. Prepared: approval 4 (purchase order, $264) and approval 5 (customer message). Decisions, all by KYLE: approval 5 approved 22:19:17; approval 4 approved 22:19:52. The order's concerns name the pending payment of invoice 501 (approval 3, from ticket 101) as the blocker on shipment.</p>
+        <p class="src">Times are local (UTC−4), 2026-10-14. For an accepted handoff the first time is when the receiving agent got the task and the second is when the delegate call returned; a refused call has one time. Source: output/audit_trail.json (run b3a22c396443) and campus_customs_new.db.</p>
+      </div>
+    </section>
+  </div>
+
+  <div class="page" id="cash">
+    <h2>Cash</h2>
+    <section id="cash-expected">
+      <h3>Expected</h3>
+      <p class="later">coming later</p>
+    </section>
+    <section id="cash-actual">
+      <h3>Actual</h3>
+      <div class="actual">
+        <h4>Money out, step by step</h4>
+        <table><thead><tr><th>Time</th><th>Approval</th><th>What it did</th><th>Cash change</th><th>Checking after</th></tr></thead><tbody>
+<tr><td class="t">Start</td><td>2026-08-31 (shop date)</td><td>Starting checking balance</td><td class="t"></td><td class="t">$3,400.00</td></tr>
+<tr><td class="t">22:08:57</td><td>Approval 1: payment, ticket 102</td><td>Rent to Elm City Properties (lease 1)</td><td class="t">−$2,400.00</td><td class="t">$1,000.00</td></tr>
+<tr><td class="t">22:15:23</td><td>Approval 2: customer message, ticket 101</td><td>Reply to Tauhid Zaman. No money involved.</td><td class="t">$0.00</td><td class="t">$1,000.00</td></tr>
+<tr><td class="t">22:19:17</td><td>Approval 5: customer message, ticket 103</td><td>Reply to Yale AI Club stating $49 per hoodie, $980 for 20. No money involved.</td><td class="t">$0.00</td><td class="t">$1,000.00</td></tr>
+<tr><td class="t">22:19:52</td><td>Approval 4: purchase order, ticket 103</td><td>Order of 12 hoodies from Bulldog Print Co, $264. <b>Creates open invoice 502; no cash moves.</b></td><td class="t">$0.00</td><td class="t">$1,000.00</td></tr>
+<tr><td class="t">22:20:22</td><td>Approval 3: payment, ticket 101</td><td>Pay invoice 501 (Bulldog Print Co, Rush reprint), $840</td><td class="t">−$840.00</td><td class="t">$160.00</td></tr>
+<tr><td class="t">End</td><td></td><td>Ending checking balance</td><td class="t"></td><td class="t"><b>$160.00</b></td></tr>
+</tbody></table>
+        <p>Total cash that left checking: <b>$3,240.00</b> ($2,400.00 rent + $840.00 invoice 501). $3,400.00 − $3,240.00 = <b>$160.00</b>. All five approvals were made by KYLE.</p>
+        <h4>Why the purchase did not change the cash balance</h4>
+        <ul>
+          <li><b>It was a purchase order, not a payment.</b> Approval 4 placed an order with Bulldog Print Co for 12 hoodies. The system records an approved order as a new <b>open invoice</b> (invoice 502, $264.00, due 2026-09-05): a bill the shop now owes. It does not write a payments row and does not touch <code>cash_accounts</code>, so no cash changed hands when it was approved.</li>
+          <li><b>Cash leaves checking only when a payment is approved.</b> Approvals 1 and 3 were payments: each wrote a payments row, deducted the amount from checking, and either moved the lease's next due date (rent) or marked the invoice paid (invoice 501). Paying invoice 502 later would be a separate payment approval.</li>
+          <li><b>So the purchase changed what the shop owes, not what it holds.</b> Checking was $1,000.00 before and after approval 4. The $264.00 is a liability waiting to be paid.</li>
+          <li><b>The cash rule still applied to the purchase.</b> Approving an order is blocked if its amount is more than the current checking balance. $264.00 against $1,000.00 passed.</li>
+        </ul>
+        <h4>What is still open</h4>
+        <ul>
+          <li>Invoice 502, $264.00, due 2026-09-05, unpaid. Checking is $160.00, so paying it would be blocked until cash covers it (cash cannot go negative; the model has no incoming cash). The shortfall is $104.00.</li>
+          <li>Order of approvals mattered. The $840.00 payment was still pending when the $264.00 order was approved, so the two together ($1,104.00) were more than the $1,000.00 on hand. The purchase check compares the order with the balance at that moment, not with other pending items. Had the payment been approved first (checking $160.00), the order would have been blocked.</li>
+          <li>Rent next due 2026-10-02, $2,400.00.</li>
+        </ul>
+        <p class="src">Source: pending_approvals, payments, invoices, leases and cash_accounts in campus_customs_new.db, and the approval entries in output/audit_trail.json. Original checking balance: campus_customs.db.</p>
+      </div>
+    </section>
+  </div>
+
+  <div class="page" id="reflections">
+    <h2>Reflections</h2>
+    <section id="reflections-expected">
+      <h3>Expected</h3>
+      <p class="later">coming later</p>
+    </section>
+    <section id="reflections-actual">
+      <h3>Actual</h3>
+      <div class="actual">
+        <h4 class="q" style="margin-top:0">1. How would you evaluate the performance of the agents on each ticket, and why?</h4>
+        <p>Performance was best on ticket 102, and equally weaker on tickets 101 and 103.</p>
+        <ul>
+          <li><b>Ticket 102 (best).</b> The objective was relatively straightforward and the pings between agents were minimal.</li>
+          <li><b>Tickets 101 and 103 (weaker, about equal).</b> There were redundant pings between agents, and the Accounting model seemed to time out relatively frequently.</li>
+          <li><b>Approvals.</b> Early on, the tickets asked for approval of a combined payment and message. In the later stages of refinement the customer messages and the payments or purchases were sent for approval separately, although that was not explicitly requested.</li>
+        </ul>
+        <div class="records">
+          <p><b>What the audit trail shows.</b></p>
+          <p>Handoffs and check-ins per run across all test runs: ticket 101 averaged 8.8 delegate calls and 3.5 check-ins (its worst run had 29 calls and 27 check-ins, before the Boss started passing its notes on), ticket 102 averaged 5.7 and 2.3, ticket 103 averaged 4.2 and 1.6. In the final runs: 101 had 7 calls and 1 check-in, 102 had 5 and 2, 103 had 5 and 2.</p>
+          <p>Accounting accounts for the most long silences: 19 of the 51 gaps over 20 seconds, partly because it makes the most model calls (159 steps, tied with the Boss). The longest stalls came right after it prepared a payment or order (58 to 157 seconds when a typed reply was requested), and in the final run the Boss had to check in on Accounting on all three tickets.</p>
+          <p>Each payment, purchase order and customer message is its own approval, decided separately (5 approvals of 3 kinds in the final run). The customer-message approval was added in Problem 9 after the request for an approval process for customer service messages.</p>
+        </div>
+
+        <h4 class="q">2. For each ticket, how did Actual compare to the Expected plan?</h4>
+        <p>I was right about the initial agent calls but wrong about the complexity and the amount of back and forth it would take. Before I finalized the design I added a step where the Boss shares all the notes it has collected for a given ticket with the agents it asks next. That cut the excessive, redundant and repeated tool use by individual agents trying to fact-find things that had already been looked up. Once that was fixed, the behavior was relatively as expected.</p>
+        <table>
+          <thead><tr><th>Ticket</th><th>First call</th><th>Delegations</th><th>Tools</th></tr></thead>
+          <tbody>
+            <tr><td class="t">101</td><td>Expected Inventory; actual Inventory. Matches.</td><td>Expected Inventory and Customer Service. Actual added Accounting (cash outlook, and the $840 payment of overdue invoice 501 that blocks the vendor) and, through Accounting, Facilities (the lease, for the outlook). More than expected.</td><td>All four expected tools were used (<code>read_inventory</code>, <code>read_vendor</code>, <code>read_ticket</code>, <code>read_desk</code>). Extra: <code>read_invoices</code>, <code>read_balance</code>, <code>read_pricing</code>, <code>read_payments</code>, <code>read_lease</code>, <code>read_approvals</code>, <code>write_payments</code>, <code>write_messages</code>, <code>write_ticket</code>.</td></tr>
+            <tr><td class="t">102</td><td>Expected Accounting; actual Facilities first, then Accounting. The Boss got the lease first and passed it on.</td><td>Matches: Facilities, Accounting, the Boss's payment review, then human approval. Accounting did not need to ask Facilities because the Boss had already passed the lease.</td><td>Exact match: the ten expected tools were the ones used (<code>read_lease</code>, <code>read_balance</code>, <code>read_desk</code>, <code>read_ticket</code>, <code>read_invoices</code>, <code>read_inventory</code>, <code>read_pricing</code>, <code>read_approvals</code>, <code>write_payments</code>, <code>write_ticket</code>). The closest of the three.</td></tr>
+            <tr><td class="t">103</td><td>Expected Inventory; actual Inventory and Accounting together (in parallel).</td><td>The expected questions were all asked (how many, lead time, vendor, price, minimum price at 30%). Actual went further: Accounting committed to $49, the team prepared a $264 purchase order, and Customer Service drafted the note to the AI club.</td><td>All seven expected tools were used. Extra: <code>read_approvals</code>, <code>write_invoices</code>, <code>write_messages</code>, <code>write_ticket</code>. The plan listed no writes; the actual run produced a purchase order and a customer message for approval.</td></tr>
+          </tbody>
+        </table>
+
+        <h4 class="q">3. What would have been simpler as one agent with tools, and why?</h4>
+        <p>The Facilities, Accounting and Inventory agents could have been collapsed into one general database-management agent with access to all the tools, for reading and writing the database. The accounting function of writing and the customer service function of writing were appropriate as separate functions. I really liked that the Boss had a robust review back and forth with each of them, because they handle very serious material, and I would want that in a commercial setting as well.</p>
+        <div class="records">
+          <p>Why it would be simpler: Facilities' whole job was one <code>read_lease</code> call per ticket (about 7 seconds inside a run of nearly four minutes), and much of the Boss's work went into passing what one agent had learned to the next so nobody asked twice. A single agent holding all the read tools would not need that.</p>
+        </div>
+
+        <h4 class="q">4. Three new problems Campus Customs might face that this agent team could solve with the tools built</h4>
+        <ol>
+          <li><b>Drafting pricing negotiations with a vendor.</b> Inventory or Accounting drafts the message and the Boss reviews it before it is final, using the vendor and invoice tools.</li>
+          <li><b>Pricing different clothes, each with a different cost of goods sold, for a bulk order.</b> Accounting reads each item's unit cost and list price and commits to a price above the 30% margin floor, as it did with the hoodies ($49).</li>
+          <li><b>Answering questions about ordering timelines and which payment should go out first.</b> Vendor lead times and open invoices come from the database, and the Boss's cash outlook and payment review decide the order of payments.</li>
+        </ol>
+
+        <h4 class="q">5. Three new problems this agent team could not solve with the tools built, and what it would need</h4>
+        <ol>
+          <li><b>Customer interaction.</b> This needs a chat window and new database or note-taking fields so that recent conversations can be parsed by the agents. The customer-facing chat would need its own website (like HW4) and would land on the customer-facing site. Today Customer Service has no route to customers: it only drafts through the Boss.</li>
+          <li><b>Human review loops.</b> This needs the same kind of chat window and conversation fields. The user chat could feasibly be added to the desk interface, between the Boss agent and the user. Today a person can only approve or decline a prepared item, with no way to ask a follow-up or give a reason.</li>
+          <li><b>Proactive ordering when inventory is low.</b> For agents to create tickets on their own, such as inventory supplementation, there would have to be a persistent background heartbeat so that checks run, say, every hour or at the start of every day. A cloud partner could provide that service. Today a run starts only when a person presses Start.</li>
+        </ol>
+        <p>I envision these features coming from other places than new tools and new agents: a chat window and conversation fields (user to Boss, customer to Customer Service) and a background scheduler, feeding the agents already built.</p>
+        <p class="src">Source for the evidence notes: output/audit_trail.json (all test runs of 2026-10-14) and the Expected sections above. The written answers are the owner's.</p>
+      </div>
+    </section>
+  </div>
+
+</main>
+
+<script>
+  const tabs = document.querySelectorAll('nav button');
+  const pages = document.querySelectorAll('.page');
+  function show(id) {
+    pages.forEach(p => p.classList.toggle('active', p.id === id));
+    tabs.forEach(t => t.setAttribute('aria-selected', String(t.dataset.page === id)));
+    history.replaceState(null, '', '#' + id);
+  }
+  tabs.forEach(t => t.addEventListener('click', () => show(t.dataset.page)));
+  const start = location.hash.slice(1);
+  if (document.getElementById(start)) show(start);
+</script>
+</body>
+</html>

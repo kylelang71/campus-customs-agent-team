@@ -1,0 +1,135 @@
+{
+  "description": "The three Campus Customs tickets as they stand after the final test run (agent runs 22:04 to 22:19 local, approvals 22:08 to 22:20, 2026-10-14). Shop date inside the database is 2026-08-31.",
+  "source": [
+    "output/audit_trail.json (runs f49d916383c6, 49b27a82515f, b3a22c396443)",
+    "data/campus_customs_new.db (tickets, pending_approvals, payments, invoices)"
+  ],
+  "checking_balance": {
+    "start": 3400.0,
+    "end": 160.0,
+    "cash_out": 3240.0
+  },
+  "tickets": [
+    {
+      "id": 101,
+      "type": "customer_order",
+      "subject": "Bulldog tee",
+      "requester": "Tauhid Zaman",
+      "final_status": {
+        "ticket": "open",
+        "run": "done",
+        "approvals": "all decided",
+        "note": "The ticket is still 'open' in the database: the agents never close a ticket, and a later run closes it after review."
+      },
+      "outcome": "CC-TEE-WHITE size S is out of stock (0) with a 5-day lead time from Bulldog Print Co, which will not ship while overdue invoice 501 ($840) is unpaid. The team prepared the payment of invoice 501 and a stock/lead-time reply to the customer; both were approved. No reorder was placed (minimum order quantity unknown).",
+      "agent_contributions": {
+        "Boss": "Read the ticket, planned the work, asked Inventory, Accounting and Customer Service, corrected one cash outlook (rent was already approved), cleared the $840 payment, prepared the customer reply for approval and wrote the ticket note.",
+        "Inventory": "Found 0 tees in size S, Bulldog Print Co, 5-day lead time, blocking invoice 501, recommended an order of 1 and flagged the unknown minimum order quantity.",
+        "Accounting": "Built the cash outlook ($1,000 available, invoice 501 $840) and prepared the $840 payment of invoice 501 (approval 3). It asked Facilities for the lease to complete the outlook.",
+        "Facilities": "Returned lease 1 to Accounting (rent $2,400, next due 2026-10-02, already paid).",
+        "Customer Service": "Drafted the customer reply: out of stock, new stock about 5 days after an order is placed."
+      },
+      "human_approvals": [
+        {
+          "approval_id": 2,
+          "type": "customer message",
+          "what": "Reply to Tauhid Zaman: out of stock, about 5 days after an order is placed",
+          "decision": "approved",
+          "date": "2026-10-14",
+          "time": "22:15:23",
+          "utc_offset": "-04:00",
+          "decided_by": "KYLE",
+          "effect": "text recorded on the ticket notes; nothing sent"
+        },
+        {
+          "approval_id": 3,
+          "type": "payment",
+          "what": "Pay $840.00 for invoice 501 to Bulldog Print Co (Rush reprint, CC-TEE-WHITE S)",
+          "decision": "approved",
+          "date": "2026-10-14",
+          "time": "22:20:22",
+          "utc_offset": "-04:00",
+          "decided_by": "KYLE",
+          "effect": "checking -$840.00; invoice 501 marked paid"
+        }
+      ]
+    },
+    {
+      "id": 102,
+      "type": "rent_notice",
+      "subject": "Rent due",
+      "requester": "Elm City Properties",
+      "final_status": {
+        "ticket": "open",
+        "run": "done",
+        "approvals": "all decided",
+        "note": "The ticket is still 'open' in the database: the agents never close a ticket, and a later run closes it after review."
+      },
+      "outcome": "Rent of $2,400 on lease 1 was due 2026-09-02 (2 days after the shop date). The team confirmed the lease, ran the cash outlook ($1,000 left after rent) and prepared the rent payment, which was approved.",
+      "agent_contributions": {
+        "Boss": "Read the ticket, asked Facilities for the lease and Accounting for the cash outlook, cleared the payment, stopped Accounting when it stalled after preparing the payment, confirmed the approval was pending and wrote the ticket note.",
+        "Facilities": "Returned lease 1: Chapel Street shop, Elm City Properties, $2,400, next due 2026-09-02.",
+        "Accounting": "Built the cash outlook from the lease facts the Boss passed (it did not ask Facilities again) and prepared the $2,400 rent payment (approval 1). It stalled after that and was stopped by the Boss.",
+        "Inventory": "Not involved.",
+        "Customer Service": "Not involved."
+      },
+      "human_approvals": [
+        {
+          "approval_id": 1,
+          "type": "payment",
+          "what": "Pay $2,400.00 for rent to Elm City Properties (due 2026-09-02)",
+          "decision": "approved",
+          "date": "2026-10-14",
+          "time": "22:08:57",
+          "utc_offset": "-04:00",
+          "decided_by": "KYLE",
+          "effect": "checking -$2,400.00; lease 1 next due moved to 2026-10-02"
+        }
+      ]
+    },
+    {
+      "id": 103,
+      "type": "price_override",
+      "subject": "Bulk hoodie discount",
+      "requester": "Yale AI Club",
+      "final_status": {
+        "ticket": "open",
+        "run": "done",
+        "approvals": "all decided",
+        "note": "The ticket is still 'open' in the database: the agents never close a ticket, and a later run closes it after review."
+      },
+      "outcome": "Stock is 8 of the 20 hoodies wanted (CC-HOOD-NAVY, M). Accounting committed to $49.00 per unit (55.1% margin, above the 30% floor of $31.43), $980.00 for 20, and the Boss decided on it. The team prepared a $264.00 purchase order for 12 hoodies and a reply to the AI club stating the $49 price; both were approved. The order opened invoice 502 and moved no cash.",
+      "agent_contributions": {
+        "Boss": "Read the ticket, asked Inventory and Accounting in parallel, recomputed the margin (55.1%) and decided on the $49 price, had Accounting prepare the purchase, had Customer Service draft the note and prepared it for approval, and wrote the ticket note.",
+        "Inventory": "Found 8 on hand against 20 wanted, recommended ordering 12, Bulldog Print Co, 5-day lead time, blocking invoice 501, minimum order quantity unknown.",
+        "Accounting": "Committed to a $49.00 unit price (margin 55.1%, 15.52% off list, $980 revenue, $540 profit) and prepared the $264.00 purchase order for 12 units (12 x $22 unit cost, due 2026-09-05).",
+        "Customer Service": "Drafted the note to the AI club: stock band, about 5 days after an order, and the offer of $49 per hoodie, $980 for 20.",
+        "Facilities": "Not involved."
+      },
+      "human_approvals": [
+        {
+          "approval_id": 5,
+          "type": "customer message",
+          "what": "Reply to Yale AI Club: $49 per hoodie, $980 for 20, 5 or fewer in stock, about 5 days after an order",
+          "decision": "approved",
+          "date": "2026-10-14",
+          "time": "22:19:17",
+          "utc_offset": "-04:00",
+          "decided_by": "KYLE",
+          "effect": "text recorded on the ticket notes; nothing sent"
+        },
+        {
+          "approval_id": 4,
+          "type": "purchase order",
+          "what": "Place an order with Bulldog Print Co: $264.00 for 12 CC-HOOD-NAVY size M, due 2026-09-05",
+          "decision": "approved",
+          "date": "2026-10-14",
+          "time": "22:19:52",
+          "utc_offset": "-04:00",
+          "decided_by": "KYLE",
+          "effect": "opened invoice 502 ($264.00, unpaid); no cash moved"
+        }
+      ]
+    }
+  ]
+}

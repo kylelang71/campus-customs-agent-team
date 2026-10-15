@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "campus-customs": {
+      "command": "/Users/kylelang/Documents/Vibe Coding/AI Foundations/HW5/.venv/bin/python",
+      "args": [
+        "/Users/kylelang/Documents/Vibe Coding/AI Foundations/HW5/mcp_server/server.py"
+      ]
+    }
+  }
+}

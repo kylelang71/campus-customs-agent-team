@@ -1,0 +1,17 @@
+[
+  {
+    "prompt": "Use each tool individually and place the output results into mcp_smoke.json. For each include this prompt, the tool name, and the tool output in three different lines.",
+    "tool": "read_inventory",
+    "output": {"result":[{"sku":"CC-HAT-BLUE","size":"OS","name":"Yale Cap","qty":40,"location":"Aisle C"},{"sku":"CC-HOOD-NAVY","size":"L","name":"Basic Hoodie Big Yale","qty":14,"location":"Aisle A"},{"sku":"CC-HOOD-NAVY","size":"M","name":"Basic Hoodie Big Yale","qty":8,"location":"Aisle A"},{"sku":"CC-HOOD-NAVY","size":"S","name":"Basic Hoodie Big Yale","qty":4,"location":"Aisle A"},{"sku":"CC-HOOD-NAVY","size":"XL","name":"Basic Hoodie Big Yale","qty":6,"location":"Aisle A"},{"sku":"CC-MUG-CREST","size":"OS","name":"Crest Mug","qty":0,"location":"Aisle D"},{"sku":"CC-TEE-WHITE","size":"L","name":"Classic Bulldog Tee","qty":3,"location":"Aisle B"},{"sku":"CC-TEE-WHITE","size":"M","name":"Classic Bulldog Tee","qty":5,"location":"Aisle B"},{"sku":"CC-TEE-WHITE","size":"S","name":"Classic Bulldog Tee","qty":0,"location":"Aisle B"},{"sku":"CC-TEE-WHITE","size":"XL","name":"Classic Bulldog Tee","qty":2,"location":"Aisle B"}]}
+  },
+  {
+    "prompt": "Use each tool individually and place the output results into mcp_smoke.json. For each include this prompt, the tool name, and the tool output in three different lines.",
+    "tool": "read_invoices",
+    "output": {"result":[{"id":501,"vendor_id":1,"amount":840,"due_date":"2026-08-28","status":"open","description":"Rush reprint CC-TEE-WHITE S"}]}
+  },
+  {
+    "prompt": "Use each tool individually and place the output results into mcp_smoke.json. For each include this prompt, the tool name, and the tool output in three different lines.",
+    "tool": "read_balance",
+    "output": {"result":[{"name":"checking","balance":3400,"date":"2026-08-31"}]}
+  }
+]
